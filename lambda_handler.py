@@ -1,12 +1,14 @@
+from __future__ import print_function
 from credentials import AWS_ACCESS_KEY, AWS_SECRET_KEY
 import boto3
 
-class db:
+class dynamo:
     def __init__(self):
         self.dynamodb = boto3.resource(
             'dynamodb', 
             aws_access_key_id=AWS_ACCESS_KEY,
-            aws_secret_access_key=AWS_SECRET_KEY
+            aws_secret_access_key=AWS_SECRET_KEY,
+            region_name='us-east-1'
         )
         
         self.tables = {}
@@ -25,6 +27,8 @@ class db:
         return None
 
 def lambda_function(event, context):
-    db = db()
+    db = dynamo()
     
-    print(db.get_one('users', 1))
+    print(db.get_one('users', {'id': 1}))
+
+lambda_function('derp', {})
