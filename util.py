@@ -27,9 +27,9 @@ class dynamo:
         return None
 
 class responses:
-	def encode(obj):
-		return json.dumps(obj)
-	
-	def error_message(code, message):
-		resp = {'code': code, 'message': message}
-		return responses.encode(resp)
+    def encode(obj):
+        return json.dumps(obj)
+    
+    def error_message(code, message):
+        resp = {'code': code, 'message': message}
+        return responses.encode(resp)
