@@ -26,9 +26,10 @@ class dynamo:
             return ret['Item']
         return None
 
-def lambda_function(event, context):
-    db = dynamo()
-    
-    print(db.get_one('users', {'id': 1}))
-
-lambda_function('derp', {})
+class responses:
+	def encode(obj):
+		return json.dumps(obj)
+	
+	def error_message(code, message):
+		resp = {'code': code, 'message': message}
+		return responses.encode(resp)
