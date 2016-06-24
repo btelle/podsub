@@ -1,6 +1,6 @@
 from __future__ import print_function
 from credentials import AWS_ACCESS_KEY, AWS_SECRET_KEY
-import boto3
+import boto3, json
 
 class schemas:
     auth_token = {
@@ -33,11 +33,29 @@ class dynamo:
         if 'Item' in ret:
             return ret['Item']
         return None
+    
+    def insert(self, table, item):
+        if table not in self.tables:
+            raise KeyError('Table not found')
+        
+        ret = self.tables[table].put_item(Item=item)
+        return True
+    
+    def get_user_by_email(self, email):
+        res = self.tables['users'].query(
+            IndexName='email_index', 
+            KeyConditionExpression=boto3.dynamodb.conditions.Key('email').eq(email.lower()),
+            Limit=1
+        )
+        
+        if 'Items' in res and len(res['Items']) > 0:
+            return res['Items'][0]
+        return None
 
 class responses:
-    def encode(obj):
+    def encode(self, obj):
         return json.dumps(obj)
     
-    def error_message(code, message):
+    def error_message(self, code, message):
         resp = {'code': code, 'message': message}
-        return responses.encode(resp)
+        return self.encode(resp)
