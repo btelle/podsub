@@ -1,17 +1,20 @@
 from __future__ import print_function
-import boto3
+from util import dynamo
 
 def auth_handler(event, context):
     token = event['authorizationToken']
-
-    if token == 'allow':
-        return generatePolicy('user', 'Allow', event['methodArn'])
-    elif token == 'deny':
-        return generatePolicy('user', 'Deny', event['methodArn'])
-    elif token == 'unauthorized':
-        return "Unauthorized"
+    db = dynamo()
+    
+    token_item = db.get_one('auth_tokens', token)
+    
+    if token_item:
+        if token_item['expires'] > time.time():
+            return generatePolicy(token['user_id'], 'Allow', event['methodArn'])
+        else:
+            return generatePolicy(token['user_id'], 'Deny', event['methodArn'])
+        
     else:
-        return "error"
+        return "Unauthorized"
 
 def generatePolicy(principalId, effect, resource):
     authResponse = {}
