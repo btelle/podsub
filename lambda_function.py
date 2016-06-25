@@ -9,7 +9,7 @@ def lambda_handler(event, context):
         endpoint = event['context']['resource-path'].lower()
         method = event['context']['http-method'].lower()
     except KeyError:
-        return responses.error_message(400, 'Bad Response')
+        raise RuntimeError(responses.error_message(400, 'Bad Response'))
     
     if endpoint == '/register' and method == 'post':
         return pod.register(event['body-json'])
@@ -38,4 +38,4 @@ def lambda_handler(event, context):
     if endpoint == '/episodes/{id}' and method == 'get':
         return pod.get_episode(event['params']['path']['id'])
     
-    return responses.error_message(400, 'Bad Request')
+    raise RuntimeError(responses.error_message(400, 'Bad Request'))

@@ -1,7 +1,7 @@
 from __future__ import print_function
 from util import responses, dynamo
 from decimal import Decimal
-import uuid, bcrypt, time
+import uuid, bcrypt, time, sys
 
 class PodSub:
     def __init__(self):
@@ -11,7 +11,7 @@ class PodSub:
     def register(self, body):
         exists = self.db.get_user_by_email(body['email'])
         if exists:
-            return self.responses.error_message(400, 'User already exists')
+            raise RuntimeError(self.responses.error_message(400, 'Error: email already exists'))
         else:
             user = {
                 'id': str(uuid.uuid4()), 
@@ -27,7 +27,7 @@ class PodSub:
             }
             self.db.insert('auth_tokens', auth_token)
             
-            return self.responses.encode({'token': auth_token['token'], 'message': 'Registered successfully'})
+            return {'token': auth_token['token'], 'message': 'Registered successfully'}
     
     def login(self, body):
         user = self.db.get_user_by_email(body['email'])
@@ -39,8 +39,8 @@ class PodSub:
                     'user_id': user['id']
                 }
                 self.db.insert('auth_tokens', auth_token)
-                return self.responses.encode({'token': auth_token['token'], 'message': 'Logged in successfully'})
+                return {'token': auth_token['token'], 'message': 'Logged in successfully'}
             else:
-                return self.responses.error_message(403, 'Authentication Error: Permission Denied')
+                raise RuntimeError(self.responses.error_message(403, 'Authentication Error: Permission Denied'))
         else:
-            return self.responses.error_message(403, 'Authentication Error: Permission Denied')
+            raise RuntimeError(self.responses.error_message(403, 'Authentication Error: Permission Denied'))

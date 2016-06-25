@@ -57,5 +57,5 @@ class responses:
         return json.dumps(obj)
     
     def error_message(self, code, message):
-        resp = {'code': code, 'message': message}
-        return self.encode(resp)
+        resp = {'message': message, 'code': code}
+        return resp
