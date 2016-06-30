@@ -8,6 +8,38 @@ class schemas:
         'expires': 1466727955.949729,
         'user_id': '12038674e56-sduyds-23238g-dsygser6t83'
     }
+    
+    user = {
+        'id': '12038674e56-sduyds-23238g-dsygser6t83',
+        'email': 'user@server.com',
+        'passhash': '$2a$12$3UIdq0eXvo2LIP3Ae89T4.M4beFQLdXnsW/N91b6EZbBXSyESfeoq',
+        'podcasts': [
+            '762238678c98-87675ef334-2334adfe-2333434'
+        ],
+        'episodes': [
+            'a06f86dd-ea2a-4616-91ee-a09fedd32cbd': {
+                'status': 'in_progress',
+                'progress': 1233
+            }
+        ]
+    }
+    
+    podcast = {
+        'id': '762238678c98-87675ef334-2334adfe-2333434',
+        'title': 'Podcast Title',
+        'description': 'Description of Podcast',
+        'url': 'https://stitcher.com/shows/asdf.rss',
+        'image': 'https://cdn.stitcher.com/asdf.jpg',
+        'explicit': False
+    }
+    
+    episode = {
+        'id': 'a06f86dd-ea2a-4616-91ee-a09fedd32cbd',
+        'guid': 'asdfsieehuods',
+        'url': 'https://cdn.stitcher.com/asdf.mp3',
+        'release_date': '2016-06-27T23:48:05-700',
+        'duration': 2640
+    }
 
 class dynamo:
     def __init__(self):

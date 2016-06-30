@@ -16,7 +16,9 @@ class PodSub:
             user = {
                 'id': str(uuid.uuid4()), 
                 'email': body['email'], 
-                'passhash': bcrypt.hashpw(body['password'], bcrypt.gensalt())
+                'passhash': bcrypt.hashpw(body['password'], bcrypt.gensalt()),
+                'podcasts': [],
+                'episodes': []
             }
             self.db.insert('users', user)
             
