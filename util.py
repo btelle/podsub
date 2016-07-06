@@ -16,12 +16,12 @@ class schemas:
         'podcasts': [
             '762238678c98-87675ef334-2334adfe-2333434'
         ],
-        'episodes': [
+        'episodes': {
             'a06f86dd-ea2a-4616-91ee-a09fedd32cbd': {
                 'status': 'in_progress',
                 'progress': 1233
             }
-        ]
+        }
     }
     
     podcast = {
@@ -35,10 +35,12 @@ class schemas:
     
     episode = {
         'id': 'a06f86dd-ea2a-4616-91ee-a09fedd32cbd',
+        'podcast_id': '762238678c98-87675ef334-2334adfe-2333434',
         'guid': 'asdfsieehuods',
         'url': 'https://cdn.stitcher.com/asdf.mp3',
         'release_date': '2016-06-27T23:48:05-700',
-        'duration': 2640
+        'duration': 2640,
+        'description': 'episode level description'
     }
 
 class dynamo:

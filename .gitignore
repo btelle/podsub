@@ -8,3 +8,6 @@ credentials.py
 
 # libraries
 bcrypt
+requests
+pytz
+feedparser*
