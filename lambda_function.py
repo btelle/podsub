@@ -21,19 +21,19 @@ def lambda_handler(event, context):
         return pod.login(event['body-json'])
     
     if endpoint == '/podcasts' and method == 'get':
-        return pod.get_podcasts(user, event['body-json'])
+        return pod.get_podcasts(user, **event['params']['querystring'])
     
     if endpoint == '/podcasts' and method == 'post':
         return pod.post_podcast(user, event['body-json'])
     
     if endpoint == '/podcasts/{id}' and method == 'get':
-        return pod.get_podcast(user, event['params']['path']['id'], event['body-json'])
+        return pod.get_podcast(user, event['params']['path']['id'])
 
     if endpoint == '/podcasts/{id}' and method == 'delete':
         return pod.delete_podcast(user, event['params']['path']['id'])
     
     if endpoint == '/episodes' and method == 'get':
-        return pod.get_episodes(user, event['params']['query_string'])
+        return pod.get_episodes(user, **event['params']['querystring'])
     
     if endpoint == '/episodes/{id}' and method == 'put':
         return pod.update_episode(user, event['params']['path']['id'], event['body-json'])

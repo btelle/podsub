@@ -85,6 +85,24 @@ class dynamo:
         if 'Items' in res and len(res['Items']) > 0:
             return res['Items'][0]
         return None
+    
+    def get_episodes_by_podcast(self, podcast_id, limit, offset):
+        res = self.tables['episodes'].query(
+            IndexName='podsub.episodes.podcast_id_idx',
+            Select='ALL_ATTRIBUTES',
+            KeyConditions={
+                'podcast_id': {
+                    'AttributeValueList': [podcast_id],
+                    'ComparisonOperator': 'EQ'
+                }
+            },
+            ScanIndexForward=False,
+            Limit=limit
+        )
+        if 'Items' in res:
+            return res['Items']
+        else:
+            return []
 
 class responses:
     def encode(self, obj):

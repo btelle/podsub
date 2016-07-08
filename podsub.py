@@ -54,6 +54,28 @@ class PodSub:
         else:
             raise RuntimeError(self.responses.error_message(403, 'Authentication Error: Permission Denied'))
     
+    def get_podcasts(self, user, page=1, limit=25):
+        if user == None:
+            raise RuntimeError(self.responses.error_message(400, 'Error: Authentication failure'))
+        
+        if 'podcasts' in user and len(user['podcasts']) > int(limit) * (int(page) - 1):
+            podcasts = []
+            for i in range(int(limit) * (int(page) - 1), min(len(user['podcasts']), int(limit) * int(page))):
+                if user['podcasts'][i]:
+                    # TODO: use BatchGetItems
+                    podcasts.append(self.db.get_one('podcasts', {'id': user['podcasts'][i]}))
+            return podcasts
+        else:
+            return []
+    
+    def get_podcast(self, user, id):
+        if user == None:
+            raise RuntimeError(self.responses.error_message(400, 'Error: Authentication failure'))
+        
+        podcast = self.db.get_one('podcasts', {'id': id})
+        podcast['episodes'] = self.db.get_episodes_by_podcast(id, 10, 0)
+        return {'podcast': podcast}
+    
     def post_podcast(self, user, body):
         if user == None:
             raise RuntimeError(self.responses.error_message(400, 'Error: Authentication failure'))
