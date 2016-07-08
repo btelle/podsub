@@ -1,0 +1,39 @@
+{
+  "TableName": "podsub.podcasts",
+  "KeySchema": [ 
+    { 
+      "AttributeName": "id",
+      "KeyType": "HASH"
+    }
+  ],
+  "AttributeDefinitions": [ 
+    { 
+      "AttributeName": "id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "title",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "url",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "description",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "image",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "explicit",
+      "AttributeType": "BOOL"
+    }
+  ],
+  "ProvisionedThroughput": { 
+    "ReadCapacityUnits": 3,
+    "WriteCapacityUnits": 3
+  }
+}

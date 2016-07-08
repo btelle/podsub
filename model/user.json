@@ -1,0 +1,45 @@
+{
+  "TableName": "podsub.users",
+  "KeySchema": [ 
+    { 
+      "AttributeName": "id",
+      "KeyType": "HASH"
+    }
+  ],
+  "AttributeDefinitions": [ 
+    { 
+      "AttributeName": "id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "email",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "passhash",
+      "AttributeType": "S"
+    }
+  ],
+  "GlobalSecondaryIndexes": [ 
+    { 
+      "IndexName": "email_index",
+      "KeySchema": [ 
+        { 
+          "AttributeName": "email",
+          "KeyType": "HASH"
+        }
+      ],
+      "Projection": { 
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": { 
+        "ReadCapacityUnits": 2,
+        "WriteCapacityUnits": 2
+      }
+    }
+  ],
+  "ProvisionedThroughput": { 
+    "ReadCapacityUnits": 2,
+    "WriteCapacityUnits": 2
+  }
+}

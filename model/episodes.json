@@ -1,0 +1,69 @@
+{
+  "TableName": "podsub.episodes",
+  "KeySchema": [ 
+    { 
+      "AttributeName": "id",
+      "KeyType": "HASH"
+    }
+  ],
+  "AttributeDefinitions": [ 
+    { 
+      "AttributeName": "id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "podcast_id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "release_date",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "description",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "duration",
+      "AttributeType": "N"
+    },
+    {
+      "AttributeName": "filesize",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "guid",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "link",
+      "AttributeType": "S"
+    }
+  ],
+  "GlobalSecondaryIndexes": [ 
+    { 
+      "IndexName": "podsub.episodes.podcast_id_idx",
+      "KeySchema": [ 
+        { 
+          "AttributeName": "podcast_id",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "release_date",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": { 
+        "ProjectionType": "ALL"
+      },
+      "ProvisionedThroughput": { 
+        "ReadCapacityUnits": 3,
+        "WriteCapacityUnits": 1
+      }
+    }
+  ],
+  "ProvisionedThroughput": { 
+    "ReadCapacityUnits": 3,
+    "WriteCapacityUnits": 3
+  }
+}

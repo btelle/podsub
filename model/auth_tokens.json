@@ -1,0 +1,27 @@
+{
+  "TableName": "podsub.auth_tokens",
+  "KeySchema": [ 
+    { 
+      "AttributeName": "token",
+      "KeyType": "HASH"
+    }
+  ],
+  "AttributeDefinitions": [ 
+    { 
+      "AttributeName": "token",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "user_id",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "expires",
+      "AttributeType": "N"
+    }
+  ],
+  "ProvisionedThroughput": { 
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}
