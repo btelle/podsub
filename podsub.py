@@ -83,33 +83,53 @@ class PodSub:
         if not body['url']:
             raise RuntimeError(self.responses.error_message(400, 'Error: Missing required field url'))
         else:
-            resp = requests.get(body['url'])
-            if resp.status_code == 200:
-                feed = feedparser.parse(resp.text)
-                if feed['feed']:
-                    podcast = {}
-                    podcast['id'] = str(uuid.uuid4())
-                    podcast['title'] = feed['feed']['title']
-                    podcast['description'] = feed['feed']['description']
-                    podcast['explicit'] = feed['feed']['itunes_explicit']
-                    podcast['url'] = body['url']
-                    podcast['image'] = feed['feed']['image']['href']
-                    
-                    self.db.insert('podcasts', podcast)
-                    
-                    if 'podcasts' not in user:
-                        user['podcasts'] = []
-
-                    user['podcasts'].append(podcast['id'])
+            if 'podcasts' not in user or not user['podcasts']:
+                user['podcasts'] = []
+            
+            exists = self.db.get_podcast_by_url(body['url'])
+            
+            if exists:
+                if exists['id'] not in user['podcasts']:
+                    user['podcasts'].append(exists['id'])
                     self.db.insert('users', user)
-                    
-                    for ep in feed['entries']:
-                        episode = self.parse_episode(podcast['id'], ep)
-                        self.db.insert('episodes', episode)
-                        
-            else:
-                raise RuntimeError(self.responses.error_message(resp.status_code, 'Error: could not fetch podcast URL'))
                 
+                return {"ok": True, "podcast": exists}
+            else:
+                resp = requests.get(body['url'])
+                if resp.status_code == 200:
+                    feed = feedparser.parse(resp.text)
+                    if feed['feed']:
+                        podcast = {}
+                        podcast['id'] = str(uuid.uuid4())
+                        podcast['title'] = feed['feed']['title']
+                        podcast['description'] = feed['feed']['description']
+                        podcast['explicit'] = feed['feed']['itunes_explicit']
+                        podcast['url'] = body['url']
+                        podcast['image'] = feed['feed']['image']['href']
+                        
+                        self.db.insert('podcasts', podcast)
+                        
+                        user['podcasts'].append(podcast['id'])
+                        self.db.insert('users', user)
+                        
+                        for ep in feed['entries']:
+                            episode = self.parse_episode(podcast['id'], ep)
+                            self.db.insert('episodes', episode)
+                        
+                        return {"ok": True, "podcast": podcast}
+            
+            raise RuntimeError(self.responses.error_message(resp.status_code, 'Error: could not fetch podcast URL'))
+    
+    def delete_podcast(self, user, id):
+        if user == None:
+            raise RuntimeError(self.responses.error_message(400, 'Error: Authentication failure'))
+        
+        if 'podcasts' in user and id in user['podcasts']:
+            user['podcasts'].remove(id)
+            self.db.insert('users', user)
+        
+        return self.responses.ok(message='Deleted podcast')
+    
     def parse_episode(self, podcast_id, episode_rss):
         if podcast_id == None or len(episode_rss) == 0:
             raise RuntimeError(self.responses.error_message(400, 'Error: could not parse podcast feed'))

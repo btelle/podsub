@@ -86,6 +86,22 @@ class dynamo:
             return res['Items'][0]
         return None
     
+    def get_podcast_by_url(self, url):
+        res = self.tables['podcasts'].query(
+            IndexName='podsub.podcasts.url_idx',
+            Select='ALL_ATTRIBUTES',
+            KeyConditions={
+                'url': {
+                    'AttributeValueList': [url],
+                    'ComparisonOperator': 'EQ'
+                }
+            }
+        )
+        if 'Items' in res:
+            return res['Items'][0]
+        else:
+            return None
+    
     def get_episodes_by_podcast(self, podcast_id, limit, offset):
         res = self.tables['episodes'].query(
             IndexName='podsub.episodes.podcast_id_idx',
@@ -111,3 +127,6 @@ class responses:
     def error_message(self, code, message):
         resp = {'message': message, 'code': code}
         return resp
+    
+    def ok(self, message='Request was successful'):
+        return {"ok": True, "message": message}
